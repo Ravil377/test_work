@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./index.css">
+    <title>Тестовое задание</title>
+</head>
+<body>
+    <table class="table">
+        <thead>
+            <tr class="table__row table__header">
+                <th class="table__cell table__cell_auto"></th>
+                <th class="table__cell table__cell_auto">N</th>
+                <th class="table__cell table__cell-sort table__drop-zone" 
+                    id="draggable" 
+                    draggable="true" 
+                    ondragstart="event.dataTransfer.setData('text/html', this.innerHTML)">ФИО
+                </th>
+                <th class="table__cell table__cell-sort table__drop-zone" 
+                    id="draggable" 
+                    draggable="true" 
+                    ondragstart="event.dataTransfer.setData('text/html', this.innerHTML)">Дата рождения
+                </th>
+                <th class="table__cell table__cell-sort table__drop-zone" 
+                    id="draggable" 
+                    draggable="true" 
+                    ondragstart="event.dataTransfer.setData('text/html', this.innerHTML)">Оклад
+                </th>
+            </tr>
+        </thead>
+        <tbody class="table__body">
+
+        </tbody>
+        <tfoot class="table__foot">
+            <tr class="table__input table__row">
+                <form name="addEntry" class="form addEntry">
+                    <td class="table__cell table__cell_auto"><button type="submit" class="table__entry-add">Добавить запись</button></td>
+                    <td class="table__cell table__cell_auto"></td>
+                    <td class="table__cell"><input type="text" name="fio" class="entry-fio" placeholder="ФИО" required></td>
+                    <td class="table__cell"><input type="date" name="birthday" class="entry-birthday" placeholder="Дата рождения" required pattern="(0[1-9]|1[0-9]|2[0-9]|3[01]).(0[1-9]|1[012]).[0-9]{4}"></td>
+                    <td class="table__cell"><input type="number" name="oklad" class="entry-oklad" placeholder="Оклад" required></td>
+                </form>
+            </tr>
+            <tr class="table__total table__row">
+                <td class="table__cell">итого</td>
+                <td class="table__cell"></td>
+                <td class="table__cell total-fio"></td>
+                <td class="table__cell total-birthday"></td>
+                <td class="table__cell total-oklad"></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <template class="cell-template">
+        <tr class="table__entry table__row">
+            <td class="table__cell table__cell_auto"><button class="table__entry-remove">Удалить запись</button></td>
+            <td class="table__cell table__cell-id"></td>
+            <td class="table__cell table__edit table__cell-fio" name="fio"></td>
+            <td class="table__cell table__edit table__cell-bdate" name="bdate"></td>
+            <td class="table__cell table__edit table__cell-oklad" name="oklad"></td>
+        </tr>
+    </template>    
+
+<script src="./script.js"></script>
+</body>
+</html>
