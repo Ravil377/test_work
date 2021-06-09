@@ -46,6 +46,7 @@ class Entry {
   sum;
   counter;
   constructor(data, body, header) {
+      this._tmp;
       this._data = data;
       this._table = document.querySelector(".table");
       this._tableBody = this._table.querySelector(body);
@@ -89,12 +90,10 @@ class Entry {
     } else if(item.classList.contains("table__cell-button")) {
       return `<td class="table__cell table__cell_auto"><button class="table__entry-remove">Удалить запись</button></td>`; 
     } else if(item.classList.contains("table__cell-id")) {
-      return `<td class="table__cell">${counter}</td>`;
+      return `<td class="table__cell table__cell-id">${counter}</td>`;
     }
   }
   
-  
-
   _totalResult(isPlus) {
       if (isPlus) {
           counter++;
@@ -116,10 +115,12 @@ class Entry {
       this._inputArea = document.createElement("input");
       if (this._data.getAttribute('Name') === "fio") {
         this._inputArea.type = "text";
+        this._inputArea.addEventListener("keydown", this._keyHandler);
       } else if (this._data.getAttribute('Name') === "bdate") {
         this._inputArea.type = "date";
       } else {
         this._inputArea.type = "number";
+        this._tmp = this._data.textContent;
       }
       this._inputArea.value = this._data.innerHTML;
       this._data.innerHTML = "";
@@ -132,7 +133,6 @@ class Entry {
       this._btnOk = this._data.querySelector(".edit-ok");
       this._btnCancel.addEventListener("click", this._editCancel.bind(this));
       this._btnOk.addEventListener("click", this._editOk.bind(this));
-      this._inputArea.addEventListener("keydown", this._keyHandler);
   } 
 }
     
@@ -155,6 +155,10 @@ class Entry {
     this._inputArea.removeEventListener("keydown", this._keyHandler);
     this._data.classList.remove("table__cell-edit");
     this._data.innerHTML = this._inputArea.value;
+    if(this._data.classList.contains('table__cell-oklad')) {
+      sum = (sum - this._tmp) + Number(this._inputArea.value);
+      this._totalOklad.textContent = sum;
+    };
     this._copyData = '';
   }
 }
@@ -176,16 +180,6 @@ function addEntry(evt) {
   entryBirthday.value = '';
   entryOklad.value = '';
 }
-
-// function sortEntry(body, data) {
-//   body.appendChild(
-//       generateEntry({
-//           fio: entryFio.value,
-//           birthday: entryBirthday.value,
-//           oklad: Number(entryOklad.value),
-//       })
-//   );
-// }
 
 function loadEntrys(cells) {
   cells.forEach(cell => {
@@ -214,11 +208,16 @@ const comparer = function(idx, asc) {
 
 headerCellsSort.forEach(columnSort => columnSort.addEventListener('click', (() =>
     {
+        counter = 1;
         const table = columnSort.closest('table');
         const tbody = table.querySelector('tbody');
         Array.from(tbody.querySelectorAll('tr'))
         .sort(comparer(Array.from(columnSort.parentNode.children).indexOf(columnSort), this.asc = !this.asc))
-        .forEach(tr => tbody.appendChild(tr));
+        .forEach(tr => {
+          tr.querySelector('.table__cell-id').textContent = counter++;
+          tbody.appendChild(tr);
+        }); 
+          
 })));
 
 
