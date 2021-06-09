@@ -45,14 +45,14 @@ const tableFoot = document.querySelector('.table__foot');
 class Entry {
   sum;
   counter;
-  constructor(data) {
+  constructor(data, body, header) {
       this._data = data;
       this._table = document.querySelector(".table");
-      this._tableBody = this._table.querySelector(".table__body");
+      this._tableBody = this._table.querySelector(body);
+      this._header = this._table.querySelector(header);
       this._totalFio = document.querySelector(".total-fio");
       this._totalBirthday = document.querySelector(".total-birthday");
       this._totalOklad = document.querySelector(".total-oklad");
-
   }
 
   _setEventListener() {
@@ -70,25 +70,30 @@ class Entry {
       this._totalResult(true);
       this._tr = document.createElement("tr");
       this._tr.classList.add("table__entry", "table__row");
-      this._tr.innerHTML =
-          '<td class="table__cell table__cell_auto">' +
-          '<button class="table__entry-remove">Удалить запись</button>' +
-          "</td>" +
-          '<td class="table__cell">' +
-          counter +
-          "</td>" +
-          '<td class="table__cell table__edit" name="fio">' +
-          this._data.fio +
-          "</td>" +
-          '<td class="table__cell table__edit" name="bdate">' +
-          this._data.birthday +
-          "</td>" +
-          '<td class="table__cell table__edit table__cell-oklad" name="oklad">' +
-          this._data.oklad +
-          "</td>";
+      this._tr.innerHTML = '';
+      this._header.querySelectorAll('.table__cell').forEach(item => {  
+        this._tr.innerHTML = this._tr.innerHTML + this._createTd(item);
+      });
+      
       this._setEventListener();
       return this._tr;
   }
+
+  _createTd(item) {
+    if(item.classList.contains("table__cell-fio")) {
+      return `<td class="table__cell table__edit" name="fio">${this._data.fio}</td>`;
+    } else if(item.classList.contains("table__cell-birthday")) {
+      return `<td class="table__cell table__edit" name="bdate">${this._data.birthday}</td>`;
+    } else if(item.classList.contains("table__cell-oklad")) {
+      return `<td class="table__cell table__edit table__cell-oklad" name="oklad">${this._data.oklad}</td>`;
+    } else if(item.classList.contains("table__cell-button")) {
+      return `<td class="table__cell table__cell_auto"><button class="table__entry-remove">Удалить запись</button></td>`; 
+    } else if(item.classList.contains("table__cell-id")) {
+      return `<td class="table__cell">${counter}</td>`;
+    }
+  }
+  
+  
 
   _totalResult(isPlus) {
       if (isPlus) {
@@ -155,8 +160,7 @@ class Entry {
 }
 
 function generateEntry(item) {
-  console.log(item);
-  const entry = new Entry(item, ".table__body");
+  const entry = new Entry(item, ".table__body", ".table__header");
   return entry.createEntry();
 }
 
@@ -167,9 +171,10 @@ function addEntry(evt) {
     birthday: entryBirthday.value,
     oklad: Number(entryOklad.value),
   };
-  // console.log(dataEl);
   tableBody.appendChild(generateEntry(dataEl));
-  formEntry.reset();
+  entryFio.value ='';
+  entryBirthday.value = '';
+  entryOklad.value = '';
 }
 
 // function sortEntry(body, data) {
